@@ -1,0 +1,6 @@
+{
+    "name": "Default",
+    "db":{
+        "name": "mongodb://localhost/portfolio44DEVELOPMENT"
+    } 
+}

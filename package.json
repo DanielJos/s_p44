@@ -1,0 +1,21 @@
+{
+  "name": "s_portfolio44_1",
+  "version": "1.0.0",
+  "description": "Server for Portfolio44.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Carey",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "config": "^3.3.1",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "helmet": "^3.23.3",
+    "mongoose": "^5.9.22",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.0"
+  }
+}

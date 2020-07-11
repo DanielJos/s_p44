@@ -1,0 +1,107 @@
+const Joi = require('@hapi/joi');
+const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+const pug = require("pug");
+
+router.use(express.json());        // parses all requests in to json objects
+router.use(express.static("./stylesheets"))
+
+// define the DB's portfolio schema
+const portfolioSchema = new mongoose.Schema({
+    portfolioID: {
+        type: String,
+        required: true,
+        minlength: 5,
+        lowercase: true,
+    }
+});
+
+// Joi req.body schema
+const joischema = Joi.object({
+    portfolioID: Joi.string().min(5).required()
+  });
+
+// define a new model
+const Portfolio = mongoose.model("Portfolio", portfolioSchema);
+
+router.get("/", async (req, res)=>{
+    
+    // get the portfolio (await promise)
+    res.render("index", {username: "Testo"});
+});
+
+// get a portfolio according to the end of the url
+router.get("/:portID", async (req, res)=>{
+    
+    // get the portfolio (await promise)
+    const portfolio = await Portfolio.find({
+        portfolioID: req.params.portID
+    });
+    res.send(portfolio);
+});
+
+// post a portfolio from body
+router.post("/", async (req, res)=>{
+      // validate the req.body against the schema
+      const result = joischema.validate(req.body);
+
+      console.log(result);
+
+      // bail is error
+      if(result.error){
+          return res.status(400).send(result.error);
+      }
+
+      // "let" because we want to return the ID property when it has saved
+      let portfolio = new Portfolio({
+          portfolioID: req.body.portfolioID
+      })
+      portfolio = await portfolio.save();
+
+      res.send(portfolio);
+});
+
+// find a portfolio, validate and then add the addition
+router.put("/:portID", async (req, res)=>{
+
+    // validate the req body
+    const result = portfolioSchema.validate(req.body)
+
+      // bail if error
+      if(result.error){
+          return res.status(400).send(error.details[0].message);
+      }
+
+    // query first
+    const portfolio = await Portfolio.find( {portfolioID: portID} );
+    // if portfolio doesnt exist
+    if(!portfolio) return res.status(404).send("404");
+    portfolio.set({
+        portfolioID: req.body.PortfolioID
+    });
+    portfolio = await portfolio.save();
+    debug(result);
+});
+
+router.delete("/:portID", async (req, res)=>{
+
+    // find portfolio
+    const portfolio = await Portfolio.find( {portfolioID: portID} );
+    if(!portfolio) return res.status(404).send("No Portfolio to Delete...");
+
+    // delete the portfolio
+    const result = await Portfolio.deleteOne( {portfolioID: portID} );
+    res.send(result + portfolio);
+
+});
+
+function validatePortfolio(portfolio) {
+    const schema = {
+      portfolioID: Joi.string().min(5).required()
+    };
+  
+    return schema.validate(portfolio);
+  }
+
+module.exports = router;
