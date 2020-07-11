@@ -33,12 +33,17 @@ router.get("/", async (req, res)=>{
 
 // get a portfolio according to the end of the url
 router.get("/:portID", async (req, res)=>{
-    
+    try{                                        // TODO: need to consider validation
     // get the portfolio (await promise)
     const portfolio = await Portfolio.find({
         portfolioID: req.params.portID
     });
-    res.send(portfolio);
+    console.log(req.params.portID);
+    res.render("index", {username: req.params.portID});
+    }
+    catch{
+        console.error(error.message);
+    }
 });
 
 // post a portfolio from body
