@@ -57,7 +57,7 @@ router.get("/:pID", async (req, res)=>{
         debug("404: PAGE NOT FOUND");
     }
     else{
-        res.render("index", {username: portfolio.title} );
+        res.render("index", {username: portfolio.title, email: "email@outlook.com"} );
         debug(`Rendered: ${portfolio.portID}`)
     }
 
