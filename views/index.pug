@@ -13,35 +13,41 @@ section#mainContent
   section#page1.page
     .dec
     section#row1.row
-      .content
-        | content1
-      .content
-        | content2
+      .content#content1
+        if contenttype1==="text"
+          =contenttext1
+        if contenttype1==="image"
+          img.conimage(src=path1)
+        if contenttype1==="embed"
+          ="embedded video here"
+      .content#content2
+        if contenttype2==="text"
+          =contenttext2
+        if contenttype2==="image"
+          img.conimage(src=path2)
+        if contenttype2==="embed"
+          ="embedded video here"
   section#page2.page
     .dec
     section#row3.row
-      .content
-        | content5
-      .content
-        | content6
+      .content#content3=contenttext3
+      .content#content4=contenttext4
   section#page3.page
     .dec
     section#row5.row
-      .content
-        | content9
-      .content
-        | content10
+      .content#content5=contenttext5
+      .content#content6=contenttext6
   section#page4.page
     .dec
     section#row7.row
-      .content
-        | content13
-      .content
-        | content14
+      .content#content7
+        | content7
+      .content#content8
+        | content8
   section#page5.page
     .dec
     section#row9.row
-      .content
-        | content17
-      .content
-        | content18
+      .content#content9
+        | content9
+      .content#content10
+        | content10

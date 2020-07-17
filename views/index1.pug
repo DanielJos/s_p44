@@ -1,0 +1,50 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title portfolio44-me
+  link(rel='stylesheet' href='Home.css')
+  link(href='https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap' rel='stylesheet')
+header
+  h1 =username
+  nav
+    ul
+      li
+        a(href='index.html' target='blank')  HOME 
+      li
+        a(href='https://linkedin.com/in/aanandmistry/' target='blank')  LINKEDIN 
+      li
+        a(href='/PDFs/Aanand Mistry CV - Post Placement.pdf' target='blank')  RESUM&Eacute; 
+      li
+        a(href=email target='blank')  CONTACT 
+.container
+  section.p1      
+    .text
+        div
+            if contentype1==="text"
+                h2 =contenttitle1
+                p =contentext1
+            if contenttype1==="image"
+                img.conimage(src=path1)
+            if contenttype1==="embed"
+                ="embedded video here"
+    #R1.images
+      img(src=path1 alt='')
+  section.p1
+    #L1.images
+      img(src=path2 alt='')
+    .text2
+      h2 I do this stuff for fun.
+      p=contentext2
+  section.p1
+    .text
+      h2 I do this stuff for fun.
+      p
+        | A description of a multi-talented professional who is so incredibly employable now you&apos;ve seen their stylish site on portfolio44.com
+    #R2.images
+      img(src='/images/product1.jpg' alt='')
+  section.p1
+    #L2.images
+    .text2
+      h2
+      p  

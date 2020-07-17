@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const pug = require("pug");
+const { string } = require("@hapi/joi");
 
 router.use(express.json());        // parses all requests in to json objects
-router.use(express.static("./stylesheets"))
+router.use(express.static("./stylesheets"));
+router.use(express.static("./user_images"));        // will this send all the files to the site? TODO
 
 // define the DB's portfolio schema
 const portfolioSchema = new mongoose.Schema({
@@ -19,18 +21,53 @@ const portfolioSchema = new mongoose.Schema({
     "title": {
         type: String,
         required: true
+    },
+    "email": {
+        type: String,
+        required: true,
+    },
+    "content1": {
+        required: true,
+        type: "object",
+        properties: {
+            "contentType": { required: true ,enum: ["text","image","embed"] },
+            "text": { required: function(){return this.contentType == "text" } },
+            "imageName": { required: function(){return this.contentType == "image" } },
+            "emURL": { required: function(){return this.contentType == "embed" } }
+        } 
+    },
+    "content2": {
+        required: true,
+        type: "object",
+        properties: {
+            "contentType": { required: true ,enum: ["text","image","embed"] },
+            "text": { required: function(){return this.contentType == "text" } },
+            "imageName": { required: function(){return this.contentType == "image" } },
+            "emURL": { required: function(){return this.contentType == "embed" } }
+        }
     }
 
 });
-
 // Joi req.body schema (for validation)
 function validatePortfolio(portfolio) {     // with Joi
 
 const schema = Joi.object( {
     "portID": Joi.string().min(5).required(),
-    "title": Joi.string().required()
+    "title": Joi.string().required(),
+    "email": Joi.string(),
+    "content1": {
+        "contentType": Joi.string().required(),
+        "text": Joi.string(),
+        "imageName": Joi.string(),
+        "emURL": Joi.string()
+    },
+    "content2": {
+        "contentType": Joi.string().required(),
+        "text": Joi.string(),
+        "imageName": Joi.string(),
+        "emURL": Joi.string()
+    }
 });
-console.log(schema.validate(portfolio));
 
 return schema.validate(portfolio);
 }  
@@ -57,14 +94,25 @@ router.get("/:pID", async (req, res)=>{
         debug("404: PAGE NOT FOUND");
     }
     else{
-        res.render("index", {username: portfolio.title, email: "email@outlook.com"} );
+        res.render("index", { 
+            username: portfolio.title,
+            email: portfolio.email,
+            contenttype1: portfolio.content1.contentType,
+            contenttext1: portfolio.content1.text,
+            path1: portfolio.content1.imageName,
+            embed1: portfolio.content1.emURL,
+            contenttype2: portfolio.content2.contentType,
+            contenttext2: portfolio.content2.text,
+            path2: portfolio.content2.imageName,
+            embed2: portfolio.content2.emURL
+        } );
         debug(`Rendered: ${portfolio.portID}`)
     }
 
     
     }
     catch(err){
-        console.log(err.errors);
+        debug(err.errors);
         res.status(404);
     }
 });
@@ -76,10 +124,16 @@ router.post("/", async (req, res)=>{
     debug(req.body);
         try{
             const result = validatePortfolio(req.body);
+            console.log(result);
+            if(!result){
+                debug("\n\nHey\n\n");
+                return res.send("Invalid Entry");
+            }
         }
         catch(err){
-            console.log(err.message);
+            debug(err.message);
         }
+        
         // bail is error
         // if(result.error){
         //     return res.status(400).send(result.error);
@@ -88,7 +142,20 @@ router.post("/", async (req, res)=>{
         // "let" because we want to return the ID property when it has saved
         let portfolio = new Portfolio({     // when adding more properties remember both schema
             portID: req.body.portID,
-            title: req.body.title
+            title: req.body.title,
+            email: req.body.email,
+            content1: {
+                contentType: req.body.content1.contentType,
+                text: req.body.content1.text,
+                imageName: req.body.content1.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
+                emURL: req.body.content1.emURL
+            },
+            content2: {
+                contentType: req.body.content2.contentType,
+                text: req.body.content2.text,
+                imageName: req.body.content2.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
+                emURL: req.body.content2.emURL
+            }
         })
         portfolio = await portfolio.save();
 
@@ -96,38 +163,38 @@ router.post("/", async (req, res)=>{
 });
 
 // find a portfolio, validate and then add the addition
-router.put("/:portID", async (req, res)=>{
+// router.put("/:portID", async (req, res)=>{
 
-    // validate the req body
-    const result = portfolioSchema.validate(req.body)
+//     // validate the req body
+//     const result = portfolioSchema.validate(req.body)
 
-      // bail if error
-      if(result.error){
-          return res.status(400).send(error.details[0].message);
-      }
+//       // bail if error
+//       if(result.error){
+//           return res.status(400).send(error.details[0].message);
+//       }
 
-    // query first
-    const portfolio = await Portfolio.find( {portID: portID} );
-    // if portfolio doesnt exist
-    if(!portfolio) return res.status(404).send("404");
-    portfolio.set({
-        portID: req.body.portID
-    });
-    portfolio = await portfolio.save();
-    debug(result);
-});
+//     // query first
+//     const portfolio = await Portfolio.find( {portID: portID} );
+//     // if portfolio doesnt exist
+//     if(!portfolio) return res.status(404).send("404");
+//     portfolio.set({
+//         portID: req.body.portID
+//     });
+//     portfolio = await portfolio.save();
+//     debug(result);
+// });
 
-router.delete("/:portID", async (req, res)=>{
+// router.delete("/:portID", async (req, res)=>{
 
-    // find portfolio
-    const portfolio = await Portfolio.find( {portID: portID} );
-    if(!portfolio) return res.status(404).send("No Portfolio to Delete...");
+//     // find portfolio
+//     const portfolio = await Portfolio.find( {portID: portID} );
+//     if(!portfolio) return res.status(404).send("No Portfolio to Delete...");
 
-    // delete the portfolio
-    const result = await Portfolio.deleteOne( {portID: portID} );
-    res.send(result + portfolio);
+//     // delete the portfolio
+//     const result = await Portfolio.deleteOne( {portID: portID} );
+//     res.send(result + portfolio);
 
-});
+// });
 
 
 
