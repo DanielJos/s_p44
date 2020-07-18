@@ -7,36 +7,70 @@ head
   title Dan Carey
 section#bar
   // <img src="" alt="User1" id="icon">
-  p#titletext= username
+  p#titletext= title
   p#emailtext= email
 section#mainContent
+
   section#page1.page
     .dec
     section#row1.row
       .content#content1
-        if contenttype1==="text"
-          =contenttext1
-        if contenttype1==="image"
-          img.conimage(src=path1)
-        if contenttype1==="embed"
+        if content1.contentType==="text"
+          .contentext
+            =content1.text
+        if content1.contentType==="image"
+          img.conimage(src=content1.imageName)
+        if content1.contentType==="embed"
           ="embedded video here"
       .content#content2
-        if contenttype2==="text"
-          =contenttext2
-        if contenttype2==="image"
-          img.conimage(src=path2)
-        if contenttype2==="embed"
+        if content2.contentType==="text"
+          .contentext
+            =content2.text
+        if content2.contentType==="image"
+          img.conimage(src=content2.imageName)
+        if content2.contentType==="embed"
           ="embedded video here"
+
   section#page2.page
     .dec
     section#row3.row
-      .content#content3=contenttext3
-      .content#content4=contenttext4
+      .content#content3
+        if contenttype3==="text"
+          .contentext
+            =contenttext3
+        if contenttype3==="image"
+          img.conimage(src=path1)
+        if contenttype3==="embed"
+          ="embedded video here"
+      .content#content4
+        if contenttype4==="text"
+          .contentext
+            =contenttext4
+        if contenttype4==="image"
+          img.conimage(src=path2)
+        if contenttype4==="embed"
+          ="embedded video here"
+
   section#page3.page
     .dec
     section#row5.row
-      .content#content5=contenttext5
-      .content#content6=contenttext6
+      .content#content1
+        if contenttype5==="text"
+          .contentext
+            =contenttext5
+        if contenttype5==="image"
+          img.conimage(src=path1)
+        if contenttype5==="embed"
+          ="embedded video here"
+      .content#content6
+        if contenttype6==="text"
+          .contentext
+            =contenttext6.contenttext
+        if contenttype6==="image"
+          img.conimage(src=path2)
+        if contenttype6==="embed"
+          ="embedded video here"
+
   section#page4.page
     .dec
     section#row7.row
@@ -44,6 +78,7 @@ section#mainContent
         | content7
       .content#content8
         | content8
+        
   section#page5.page
     .dec
     section#row9.row

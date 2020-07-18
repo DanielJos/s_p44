@@ -1,115 +1,38 @@
 const debug = require("debug")("p44:debug");    // debugging
-const Joi = require('@hapi/joi');
 const mongoose = require("mongoose");
 const express = require("express");
+const {Portfolio, validate} = require("../models/portfolioSchemas.js");
 const router = express.Router();
 const pug = require("pug");
-const { string } = require("@hapi/joi");
 
 router.use(express.json());        // parses all requests in to json objects
 router.use(express.static("./stylesheets"));
 router.use(express.static("./user_images"));        // will this send all the files to the site? TODO
 
-// define the DB's portfolio schema
-const portfolioSchema = new mongoose.Schema({
-    "portID": {
-        type: String,
-        required: true,
-        minlength: 5,
-        lowercase: true,
-    },
-    "title": {
-        type: String,
-        required: true
-    },
-    "email": {
-        type: String,
-        required: true,
-    },
-    "content1": {
-        required: true,
-        type: "object",
-        properties: {
-            "contentType": { required: true ,enum: ["text","image","embed"] },
-            "text": { required: function(){return this.contentType == "text" } },
-            "imageName": { required: function(){return this.contentType == "image" } },
-            "emURL": { required: function(){return this.contentType == "embed" } }
-        } 
-    },
-    "content2": {
-        required: true,
-        type: "object",
-        properties: {
-            "contentType": { required: true ,enum: ["text","image","embed"] },
-            "text": { required: function(){return this.contentType == "text" } },
-            "imageName": { required: function(){return this.contentType == "image" } },
-            "emURL": { required: function(){return this.contentType == "embed" } }
-        }
-    }
-
-});
-// Joi req.body schema (for validation)
-function validatePortfolio(portfolio) {     // with Joi
-
-const schema = Joi.object( {
-    "portID": Joi.string().min(5).required(),
-    "title": Joi.string().required(),
-    "email": Joi.string(),
-    "content1": {
-        "contentType": Joi.string().required(),
-        "text": Joi.string(),
-        "imageName": Joi.string(),
-        "emURL": Joi.string()
-    },
-    "content2": {
-        "contentType": Joi.string().required(),
-        "text": Joi.string(),
-        "imageName": Joi.string(),
-        "emURL": Joi.string()
-    }
-});
-
-return schema.validate(portfolio);
-}  
-
-// define a new model           // collection, schema
-const Portfolio = mongoose.model("portfolio", portfolioSchema);
-
 router.get("/", async (req, res)=>{
-    
-    // get the portfolio (await promise)
-    res.render("index", {username: "Testo"});
+    res.render("index", {});
 });
 
-// get a portfolio according to the end of the url
 router.get("/:pID", async (req, res)=>{
+    debug("Begun get");
     try{                                        // TODO: need to consider validation
-    // get the portfolio (await promise)
-    const portfolio = await Portfolio.findOne({
-        portID: req.params.pID
-    });
-    
-    if(!portfolio){
-        res.status(404).send("404: PAGE NOT FOUND");
-        debug("404: PAGE NOT FOUND");
-    }
-    else{
-        res.render("index", { 
-            username: portfolio.title,
-            email: portfolio.email,
-            contenttype1: portfolio.content1.contentType,
-            contenttext1: portfolio.content1.text,
-            path1: portfolio.content1.imageName,
-            embed1: portfolio.content1.emURL,
-            contenttype2: portfolio.content2.contentType,
-            contenttext2: portfolio.content2.text,
-            path2: portfolio.content2.imageName,
-            embed2: portfolio.content2.emURL
-        } );
-        debug(`Rendered: ${portfolio.portID}`)
-    }
+        const portfolio = await Portfolio.findOne({
+            portID: req.params.pID
+        });
+        if(!portfolio){
+            res.status(404).send("404: PAGE NOT FOUND");
+            debug("404: PAGE NOT FOUND");
+        }
+        else{
+            res.render("index", { 
+                title: portfolio.title,
+                email: portfolio.email,
+                content1: portfolio.content1,
+                content2:portfolio.content2
 
-    
+            } );
+            debug(`Rendered: ${portfolio.portID}`)
+        }
     }
     catch(err){
         debug(err.errors);
@@ -123,10 +46,10 @@ router.post("/", async (req, res)=>{
     // validate the req.body against the schema
     debug(req.body);
         try{
-            const result = validatePortfolio(req.body);
+            const result = validate(req.body);
             console.log(result);
             if(!result){
-                debug("\n\nHey\n\n");
+                debug(`Joi was not obtained (Joi validation error): ${result}`);
                 return res.send("Invalid Entry");
             }
         }
@@ -166,7 +89,7 @@ router.post("/", async (req, res)=>{
 // router.put("/:portID", async (req, res)=>{
 
 //     // validate the req body
-//     const result = portfolioSchema.validate(req.body)
+//     const result = validate(req.body)
 
 //       // bail if error
 //       if(result.error){
