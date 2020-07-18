@@ -4,7 +4,7 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0')
   link(rel='stylesheet' href='stylesheet2.css')
   link(href='https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100;0,200;0,300;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&family=Muli:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,600;1,700;1,800;1,900&display=swap' rel='stylesheet')
-  title Dan Carey
+  title= title
 section#bar
   // <img src="" alt="User1" id="icon">
   p#titletext= title
@@ -33,42 +33,42 @@ section#mainContent
 
   section#page2.page
     .dec
-    section#row3.row
+    section#row2.row
       .content#content3
-        if contenttype3==="text"
+        if content3.contentType==="text"
           .contentext
-            =contenttext3
-        if contenttype3==="image"
-          img.conimage(src=path1)
-        if contenttype3==="embed"
+            =content3.text
+        if content3.contentType==="image"
+          img.conimage(src=content3.imageName)
+        if content3.contentType==="embed"
           ="embedded video here"
       .content#content4
-        if contenttype4==="text"
+        if content4.contentType==="text"
           .contentext
-            =contenttext4
-        if contenttype4==="image"
-          img.conimage(src=path2)
-        if contenttype4==="embed"
+            =content4.text
+        if content4.contentType==="image"
+          img.conimage(src=content4.imageName)
+        if content4.contentType==="embed"
           ="embedded video here"
 
   section#page3.page
     .dec
     section#row5.row
       .content#content1
-        if contenttype5==="text"
+        if contentType5==="text"
           .contentext
             =contenttext5
-        if contenttype5==="image"
+        if contentType5==="image"
           img.conimage(src=path1)
         if contenttype5==="embed"
           ="embedded video here"
       .content#content6
-        if contenttype6==="text"
+        if contentType6==="text"
           .contentext
             =contenttext6.contenttext
-        if contenttype6==="image"
+        if contentType6==="image"
           img.conimage(src=path2)
-        if contenttype6==="embed"
+        if contentType6==="embed"
           ="embedded video here"
 
   section#page4.page

@@ -4,7 +4,8 @@ const Joi = require("@hapi/joi");
 const contentSchema = new mongoose.Schema({
     "contentType": {
         required: true,
-        enum: ["text", "image"]
+        type: String,
+        enum: ["text", "image", "embed"]
     },
     "text": {
         type: String,

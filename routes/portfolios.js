@@ -14,7 +14,6 @@ router.get("/", async (req, res)=>{
 });
 
 router.get("/:pID", async (req, res)=>{
-    debug("Begun get");
     try{                                        // TODO: need to consider validation
         const portfolio = await Portfolio.findOne({
             portID: req.params.pID
@@ -24,11 +23,14 @@ router.get("/:pID", async (req, res)=>{
             debug("404: PAGE NOT FOUND");
         }
         else{
+            console.log(portfolio)
             res.render("index", { 
                 title: portfolio.title,
                 email: portfolio.email,
-                content1: portfolio.content1,
-                content2:portfolio.content2
+                content1:portfolio.content1,
+                content2:portfolio.content2,
+                content3:portfolio.content3,
+                content4:portfolio.content4
 
             } );
             debug(`Rendered: ${portfolio.portID}`)
@@ -78,10 +80,32 @@ router.post("/", async (req, res)=>{
                 text: req.body.content2.text,
                 imageName: req.body.content2.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
                 emURL: req.body.content2.emURL
+            },
+            content3: {
+                contentType: req.body.content3.contentType,
+                text: req.body.content3.text,
+                imageName: req.body.content3.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
+                emURL: req.body.content3.emURL
+            },
+            content4: {
+                contentType: req.body.content4.contentType,
+                text: req.body.content4.text,
+                imageName: req.body.content4.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
+                emURL: req.body.content4.emURL
             }
         })
-        portfolio = await portfolio.save();
-
+        try{
+            portfolio = await portfolio.save();
+            if(!portfolio){
+                res.status(400).send("Bad Request");
+                return;
+            }
+        }
+        catch(err){
+            res.status(400).send("Bad Request");
+            debug(`Error message is: ${err.message}`)
+            return;
+        }
         res.send(portfolio);
 });
 
