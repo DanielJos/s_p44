@@ -1,16 +1,18 @@
 const debug = require("debug")("p44:debug");    // debugging
 const mongoose = require("mongoose");
 const express = require("express");
-const {Portfolio, validate} = require("../models/portfolioSchemas.js");
+const {Portfolio,Content, validate: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
 const router = express.Router();
 const pug = require("pug");
+const {createPortfolio, addContent} = require("../dbOps/operations.js");
 
 router.use(express.json());        // parses all requests in to json objects
 router.use(express.static("./stylesheets"));
 router.use(express.static("./user_images"));        // will this send all the files to the site? TODO
 
 router.get("/", async (req, res)=>{
-    res.render("index", {});
+    //res.render("index", {});
+    res.send("P44 Home Page will Render Here");
 });
 
 router.get("/:pID", async (req, res)=>{
@@ -27,11 +29,7 @@ router.get("/:pID", async (req, res)=>{
             res.render("index", { 
                 title: portfolio.title,
                 email: portfolio.email,
-                content1:portfolio.content1,
-                content2:portfolio.content2,
-                content3:portfolio.content3,
-                content4:portfolio.content4
-
+                content: portfolio.content
             } );
             debug(`Rendered: ${portfolio.portID}`)
         }
@@ -44,69 +42,38 @@ router.get("/:pID", async (req, res)=>{
 
 // post a portfolio from body
 router.post("/", async (req, res)=>{
-
-    // validate the req.body against the schema
-    debug(req.body);
         try{
-            const result = validate(req.body);
-            console.log(result);
+            const result = validatePortfolio(req.body);
             if(!result){
                 debug(`Joi was not obtained (Joi validation error): ${result}`);
-                return res.send("Invalid Entry");
+                return res.send("Invalid Entry").status(400);
             }
         }
         catch(err){
             debug(err.message);
         }
-        
-        // bail is error
-        // if(result.error){
-        //     return res.status(400).send(result.error);
-        // }
 
-        // "let" because we want to return the ID property when it has saved
-        let portfolio = new Portfolio({     // when adding more properties remember both schema
-            portID: req.body.portID,
-            title: req.body.title,
-            email: req.body.email,
-            content1: {
-                contentType: req.body.content1.contentType,
-                text: req.body.content1.text,
-                imageName: req.body.content1.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
-                emURL: req.body.content1.emURL
-            },
-            content2: {
-                contentType: req.body.content2.contentType,
-                text: req.body.content2.text,
-                imageName: req.body.content2.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
-                emURL: req.body.content2.emURL
-            },
-            content3: {
-                contentType: req.body.content3.contentType,
-                text: req.body.content3.text,
-                imageName: req.body.content3.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
-                emURL: req.body.content3.emURL
-            },
-            content4: {
-                contentType: req.body.content4.contentType,
-                text: req.body.content4.text,
-                imageName: req.body.content4.imageName,     // TODO this doesnt make sense for working with images, but we can work it out.
-                emURL: req.body.content4.emURL
-            }
-        })
-        try{
-            portfolio = await portfolio.save();
-            if(!portfolio){
-                res.status(400).send("Bad Request");
-                return;
-            }
-        }
-        catch(err){
-            res.status(400).send("Bad Request");
-            debug(`Error message is: ${err.message}`)
+        const port = await createPortfolio(req.body.portID, req.body.title, req.body.email, new Content({
+            contentType: req.body.content.contentType,
+            text: req.body.content.text,
+            imageName: req.body.content.imageName,   
+            emURL: req.body.content.emURL})
+        );
+        if(!port){
+            res.status(400).send("Bad Request: 400");
             return;
         }
-        res.send(portfolio);
+        res.send(port);
+});
+
+router.post("/:pID", async (req, res)=>{
+    const result = validateContent(req.body);
+    if(!result){
+        return res.send("Invalid Content").status(400);
+    }
+    await addContent(req.params.pID, req.body);
+    res.status(200).send("Done");
+
 });
 
 // find a portfolio, validate and then add the addition

@@ -15,74 +15,74 @@ section#mainContent
     .dec
     section#row1.row
       .content#content1
-        if content1.contentType==="text"
+        if content[0].contentType==="text"
           .contentext
-            =content1.text
-        if content1.contentType==="image"
-          img.conimage(src=content1.imageName)
-        if content1.contentType==="embed"
+            =content[0].text
+        if content[0].contentType==="image"
+          img.conimage(src=content[0].imageName)
+        if content[0].contentType==="embed"
           ="embedded video here"
       .content#content2
-        if content2.contentType==="text"
+        if content[1].contentType==="text"
           .contentext
-            =content2.text
-        if content2.contentType==="image"
-          img.conimage(src=content2.imageName)
-        if content2.contentType==="embed"
+            =content[1].text
+        if content[1].contentType==="image"
+          img.conimage(src=content[1].imageName)
+        if content[1].contentType==="embed"
           ="embedded video here"
 
-  section#page2.page
-    .dec
-    section#row2.row
-      .content#content3
-        if content3.contentType==="text"
-          .contentext
-            =content3.text
-        if content3.contentType==="image"
-          img.conimage(src=content3.imageName)
-        if content3.contentType==="embed"
-          ="embedded video here"
-      .content#content4
-        if content4.contentType==="text"
-          .contentext
-            =content4.text
-        if content4.contentType==="image"
-          img.conimage(src=content4.imageName)
-        if content4.contentType==="embed"
-          ="embedded video here"
+  //- section#page2.page
+  //-   .dec
+  //-   section#row2.row
+  //-     .content#content3
+  //-       if content3.contentType==="text"
+  //-         .contentext
+  //-           =content3.text
+  //-       if content3.contentType==="image"
+  //-         img.conimage(src=content3.imageName)
+  //-       if content3.contentType==="embed"
+  //-         ="embedded video here"
+  //-     .content#content4
+  //-       if content4.contentType==="text"
+  //-         .contentext
+  //-           =content4.text
+  //-       if content4.contentType==="image"
+  //-         img.conimage(src=content4.imageName)
+  //-       if content4.contentType==="embed"
+  //-         ="embedded video here"
 
-  section#page3.page
-    .dec
-    section#row5.row
-      .content#content1
-        if contentType5==="text"
-          .contentext
-            =contenttext5
-        if contentType5==="image"
-          img.conimage(src=path1)
-        if contenttype5==="embed"
-          ="embedded video here"
-      .content#content6
-        if contentType6==="text"
-          .contentext
-            =contenttext6.contenttext
-        if contentType6==="image"
-          img.conimage(src=path2)
-        if contentType6==="embed"
-          ="embedded video here"
+  //- section#page3.page
+  //-   .dec
+  //-   section#row5.row
+  //-     .content#content1
+  //-       if contentType5==="text"
+  //-         .contentext
+  //-           =contenttext5
+  //-       if contentType5==="image"
+  //-         img.conimage(src=path1)
+  //-       if contenttype5==="embed"
+  //-         ="embedded video here"
+  //-     .content#content6
+  //-       if contentType6==="text"
+  //-         .contentext
+  //-           =contenttext6.contenttext
+  //-       if contentType6==="image"
+  //-         img.conimage(src=path2)
+  //-       if contentType6==="embed"
+  //-         ="embedded video here"
 
-  section#page4.page
-    .dec
-    section#row7.row
-      .content#content7
-        | content7
-      .content#content8
-        | content8
+  //- section#page4.page
+  //-   .dec
+  //-   section#row7.row
+  //-     .content#content7
+  //-       | content7
+  //-     .content#content8
+  //-       | content8
         
-  section#page5.page
-    .dec
-    section#row9.row
-      .content#content9
-        | content9
-      .content#content10
-        | content10
+  //- section#page5.page
+  //-   .dec
+  //-   section#row9.row
+  //-     .content#content9
+  //-       | content9
+  //-     .content#content10
+  //-       | content10

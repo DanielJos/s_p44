@@ -27,49 +27,33 @@ const portfolioSchema = new mongoose.Schema({
         required: true,
         minlength: 5,
         lowercase: true,
+        trim: true,
+        unique: true
     },
     "title": {
         type: String,
         required: true,
+        trim: true
     },
     "email": {
         type: String,
         required: true,
+        trim: true
     },
-    "content1": contentSchema,
-    "content2": contentSchema,
-    "content3": contentSchema,
-    "content4": contentSchema,
+    "content": [contentSchema]
 });
 
 const Portfolio = mongoose.model("portfolio", portfolioSchema);
+const Content = mongoose.model("content", contentSchema);
 
 function validatePortfolio(portfolio) {     // with Joi
 
-    let schema = Joi.object( {
+    const schema = Joi.object( {
         "portID": Joi.string().min(5).required(),
         "title": Joi.string().required(),
         "email": Joi.string(),
-        "content1": {
-            "contentType": Joi.string().required(),
-            "text": Joi.string(),
-            "imageName": Joi.string(),
-            "emURL": Joi.string()
-        },
-        "content2": {
-            "contentType": Joi.string().required(),
-            "text": Joi.string(),
-            "imageName": Joi.string(),
-            "emURL": Joi.string()
-        },
-        "content3": {
-            "contentType": Joi.string().required(),
-            "text": Joi.string(),
-            "imageName": Joi.string(),
-            "emURL": Joi.string()
-        },
-        "content4": {
-            "contentType": Joi.string().required(),
+        "content": {
+            "contentType": Joi.array().required(),
             "text": Joi.string(),
             "imageName": Joi.string(),
             "emURL": Joi.string()
@@ -77,7 +61,19 @@ function validatePortfolio(portfolio) {     // with Joi
     });
     
     return schema.validate(portfolio);
-    }  
-    
+}  
+function validateContent(content){
+    const schema = Joi.object({
+        "contentType": Joi.string().valid("text", "image", "embed").required(),
+        "text": Joi.string(),
+        "imageName": Joi.string(),
+        "emURL": Joi.string()
+    });
+
+    return schema.validate(content);
+}    
+
 module.exports.Portfolio = Portfolio;
+module.exports.Content = Content;
 module.exports.validate = validatePortfolio;
+module.exports.validateContent = validateContent;

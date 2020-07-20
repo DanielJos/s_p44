@@ -1,3 +1,5 @@
+const Joi = require("@hapi/joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
 const app = express();
 const debug = require("debug")("p44:debug");    // debugging
@@ -7,10 +9,15 @@ const config = require("config");       // config files
 const mongoose = require("mongoose");
 
 const portfolios = require("./routes/portfolios");   // portfolio HTTP routes
+const users = require("./routes/users");
 
 app.use(helmet());
-app.use("/", portfolios); // router
 app.set("view engine", "pug");
+
+/////////routers//////////
+app.use("/", portfolios);
+app.use("/users", users);
+//////////////////////////
 
 debug(`Config File: ${config.get("name")}`);
 debug(`NODE_ENV: ${process.env.NODE_ENV}\n`);
@@ -20,7 +27,6 @@ port = process.env.PORT || 3000;
 
 
 mongoose.connect(config.get("db.name"), {useNewUrlParser: true, useUnifiedTopology:true})
-// mongoose.connect("")
     .then(()=>console.log(`Connected to: ${config.get("db.name")}`))
     .catch(err=>console.error("Can't Connect..."));
 
