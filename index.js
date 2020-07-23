@@ -15,8 +15,8 @@ app.use(helmet());
 app.set("view engine", "pug");
 
 /////////routers//////////
-app.use("/", portfolios);
-app.use("/users", users);
+app.use("/portfolios", portfolios);
+app.use("/users/", users);
 //////////////////////////
 
 debug(`Config File: ${config.get("name")}`);
@@ -26,7 +26,7 @@ debug(`PORT: ${process.env.PORT}\n`);
 port = process.env.PORT || 3000;
 
 
-mongoose.connect(config.get("db.name"), {useNewUrlParser: true, useUnifiedTopology:true})
+mongoose.connect(config.get("db.name"), {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true})
     .then(()=>console.log(`Connected to: ${config.get("db.name")}`))
     .catch(err=>console.error("Can't Connect..."));
 
