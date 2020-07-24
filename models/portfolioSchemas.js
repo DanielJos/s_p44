@@ -21,6 +21,17 @@ const contentSchema = new mongoose.Schema({
     }
 });
 
+const pageSchema = new.mongoose.Schema({
+    "pageType": {
+        required: true,
+        type: String,
+        enum: ["gallerybox", "threebox", "twobox"],
+        lowercase: true,
+    },
+    "galleryItems": [contentSchema],
+    "content": [contentSchema]
+});
+
 const portfolioSchema = new mongoose.Schema({
     "portID": {
         type: String,
@@ -40,7 +51,7 @@ const portfolioSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    "content": [contentSchema]
+    "pages": [pageSchema]
 });
 
 const Portfolio = mongoose.model("portfolio", portfolioSchema);
@@ -51,13 +62,7 @@ function validatePortfolio(portfolio) {     // with Joi
     const schema = Joi.object( {
         "portID": Joi.string().min(5).required(),
         "title": Joi.string().required(),
-        "email": Joi.string(),
-        "content": {
-            "contentType": Joi.array().required(),
-            "text": Joi.string(),
-            "imageName": Joi.string(),
-            "emURL": Joi.string()
-        }
+        "email": Joi.string()
     });
     
     return schema.validate(portfolio);
@@ -74,7 +79,16 @@ function validateContent(content){
     return schema.validate(content);
 }    
 
+function validatePage(page){
+
+    const schema = Joi.object({
+        "pageType": Joi.string().valid("gallerybox", "threebox", "twobox").required(),
+    });
+    //console.log(schema.validate(content));
+    return schema.validate(content);
+}  
+
 module.exports.Portfolio = Portfolio;
 module.exports.Content = Content;
-module.exports.validate = validatePortfolio;
+module.exports.validatePortfolio = validatePortfolio;
 module.exports.validateContent = validateContent;

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {Portfolio, Content, validate:portValidate, validateContent: validateContent} = require("../models/portfolioSchemas.js");
+const {Portfolio, Content, validatePortfolio:portValidate, validateContent: validateContent} = require("../models/portfolioSchemas.js");
 const {User, Uservalidate} = require("../models/usersSchemas.js");
 const { result } = require("lodash");
 const debug = require("debug")("p44:debug"); 

@@ -1,0 +1,30 @@
+.pagegalleryBox
+  .content0
+    case portfolio.page[index].content[0].contentType
+    when "text"
+        =portfolio.page[index].content[0].text
+    when "image"
+        img.image(src=portfolio.page[index].content[0].imageName)
+    when "embedded"
+        //- something will go here
+  .content1
+    case portfolio.page[index].content[1].contentType
+    when "text"
+        =portfolio.page[index].content[1].text
+    when "image"
+        img.image(src=portfolio.page[index].content[1].imageName)
+    when "embedded"
+        //- something will go here 
+  .contentgallery
+    .gallery0
+        img.image(src=portfolio.page[index].galleryitem[0])
+    .gallery1
+        img.image(src=portfolio.page[index].galleryitem[1])
+    .gallery2
+        img.image(src=portfolio.page[index].galleryitem[2])
+    .gallery3
+        img.image(src=portfolio.page[index].galleryitem[3])
+    .gallery4
+        img.image(src=portfolio.page[index].galleryitem[4])
+    .gallery6
+        img.image(src=portfolio.page[index].galleryitem[5])

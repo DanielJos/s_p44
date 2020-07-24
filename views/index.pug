@@ -11,11 +11,10 @@ body
 
 
     //-   page templates
-    each page in portfolio.page
-
-        case portfolio.templateType
+    each page, index in portfolio.page
+        case portfolio.page[index].pageType
         when "tem1"
-            //- template 1 include
+            include pageTemplates/galleryBox.pug
         when "tem2"
             //- template 2 include
         when "tem3"
@@ -28,3 +27,4 @@ body
             //- template 6 include
         when "tem7"
             //- template 7 include
+        

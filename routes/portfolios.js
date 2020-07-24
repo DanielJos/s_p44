@@ -1,7 +1,7 @@
 const debug = require("debug")("p44:debug");    // debugging
 const mongoose = require("mongoose");
 const express = require("express");
-const {Portfolio,Content, validate: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
+const {Portfolio,Content, validatePortfolio: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
 const router = express.Router();
 const pug = require("pug");
 const {createPortfolio, addContent} = require("../dbOps/operations.js");
