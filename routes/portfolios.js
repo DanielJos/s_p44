@@ -6,42 +6,45 @@ const router = express.Router();
 const pug = require("pug");
 const {createPortfolio, addContent} = require("../dbOps/operations.js");
 
-router.use(express.json());        // parses all requests in to json objects
+router.use(express.json());
 router.use(express.static("./stylesheets"));
 router.use(express.static("./user_images"));        // will this send all the files to the site? TODO
 
 router.get("/", async (req, res)=>{
-    //res.render("index", {});
-    res.send("P44 Home Page will Render Here");
+    res.render("welcome");
+    return;
 });
 
 router.get("/:pID", async (req, res)=>{
-    try{                                        // TODO: need to consider validation
-        const portfolio = await Portfolio.findOne({
-            portID: req.params.pID
-        });
-        if(!portfolio){
-            res.status(404).send("404: PAGE NOT FOUND");
-            debug("404: PAGE NOT FOUND");
+    //if(!req.params.pID == "NULL")
+        try{                                        // TODO: need to consider validation
+            const portfolio = await Portfolio.findOne({portID: req.params.pID});
+            console.log(portfolio);
+            if(!portfolio){
+                res.status(404).send("404: PAGE NOT FOUND");
+                debug("404: PAGE NOT FOUND");
+                return;
+            }
+            else{
+                res.render("index", { 
+                    title: portfolio.title,
+                    email: portfolio.email,
+                    content: portfolio.content
+                } );
+                debug(`Rendered: ${portfolio.portID}`)
+                return;
+            }
         }
-        else{
-            console.log(portfolio)
-            res.render("index", { 
-                title: portfolio.title,
-                email: portfolio.email,
-                content: portfolio.content
-            } );
-            debug(`Rendered: ${portfolio.portID}`)
+        catch(err){
+            debug(err.errors);
+            res.status(404);
+            return;
         }
-    }
-    catch(err){
-        debug(err.errors);
-        res.status(404);
-    }
 });
 
 // post a portfolio from body
 router.post("/", async (req, res)=>{
+    debug("=-=-=-=-=-=-=-=-=-=Post Portfolio Req=-=-=-=-=-=-=-=-=-=-=-");
         try{
             const result = validatePortfolio(req.body);
             if(!result){
@@ -66,14 +69,21 @@ router.post("/", async (req, res)=>{
         res.send(port);
 });
 
+// push content block
 router.post("/:pID", async (req, res)=>{
-    const result = validateContent(req.body);
-    if(!result){
-        return res.send("Invalid Content").status(400);
-    }
-    await addContent(req.params.pID, req.body);
-    res.status(200).send("Done");
+    debug("=-=-=-=-=-=-=-=-=-=Add Content Req=-=-=-=-=-=-=-=-=-=-=-");
 
+    let answer = await addContent(req.params.pID, req.body);
+    if(answer.error){
+        res.status(400).send(answer.error.details.message);
+        console.log(answer.error.details.message);
+        return;
+    }
+    else{
+        res.status(200).send(`Successfully added content block to ${req.params.pID}'s Portfolio`);
+        return;
+    }
+    
 });
 
 // find a portfolio, validate and then add the addition

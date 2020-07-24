@@ -1,0 +1,24 @@
+*{
+    font-family: 'Libre Franklin', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+p{
+    margin-top: 10vh;
+    font-weight: 500;
+    font-size: 150%;
+    color: white;
+    background-color: black;
+    padding-left: 3px;
+}
+#container{
+    width: 100vw;
+    height:50vh;
+    float:left;
+   /* border: solid black 1px; */
+}
+
+.bar{
+    fill: aqua;
+}

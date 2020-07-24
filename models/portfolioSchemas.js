@@ -63,13 +63,14 @@ function validatePortfolio(portfolio) {     // with Joi
     return schema.validate(portfolio);
 }  
 function validateContent(content){
+
     const schema = Joi.object({
         "contentType": Joi.string().valid("text", "image", "embed").required(),
         "text": Joi.string(),
         "imageName": Joi.string(),
         "emURL": Joi.string()
     });
-
+    //console.log(schema.validate(content));
     return schema.validate(content);
 }    
 

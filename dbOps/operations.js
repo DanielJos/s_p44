@@ -1,27 +1,28 @@
 const mongoose = require("mongoose");
 const {Portfolio, Content, validate:portValidate, validateContent: validateContent} = require("../models/portfolioSchemas.js");
 const {User, Uservalidate} = require("../models/usersSchemas.js");
+const { result } = require("lodash");
 const debug = require("debug")("p44:debug"); 
 
+// validate and add content block (returns Joi schema.validate)
 async function addContent(id, content){
-
-    debug("Beginning add Content");
-    debug(content);
-    const portfolio = await Portfolio.findOne({portID: id});
-    debug(portfolio.content);
+    debug("=-=-=-=-=-=-=-=-=-=Beginning addContent=-=-=-=-=-=-=-=-=-=-=-");
+    let portfolio = await Portfolio.findOne({portID: id});
+    let result = validateContent(content);
+    
     portfolio.content.push(content);
     
-    result = portValidate(portfolio);
-    if(result){
+    if(!result.error){
         portfolio.save();
-        return;
+        debug(`saved ${portfolio.portID}'s content block`);
+        return result;
     }
     else{
-        console.log("Invalid:")
-        return;
+        return result;
     }  
 }
 async function createPortfolio(portID, title, email, content) {  
+  debug("=-=-=-=-=-=-=-=-=-=Beginning Create Portfolio=-=-=-=-=-=-=-=-=-=-=-");
   const portfolio = new Portfolio({
       portID, 
       title,
@@ -43,6 +44,7 @@ async function createPortfolio(portID, title, email, content) {
     return portfolio;
   }
 async function createUser(email, username, password){
+  debug("=-=-=-=-=-=-=-=-=-=Beginning createUser=-=-=-=-=-=-=-=-=-=-=-");
   const user = new User({
     email, username, password
   });
@@ -60,9 +62,9 @@ async function createUser(email, username, password){
   return user;
 }
   
-
-//addContent("5f0f1de351c3814a10232e11", new Content({contentType: "image", imageName: "dave_1.jpg"}));
-
 exports.createPortfolio = createPortfolio;
 exports.addContent = addContent;
 exports.createUser = createUser;
+exports.User = User;
+exports.Portfolio = Portfolio;
+exports.Content = Content;
