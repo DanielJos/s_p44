@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const {Portfolio, Content, validatePortfolio:portValidate, validateContent: validateContent} = require("../models/portfolioSchemas.js");
+const {Portfolio:Portfolio, Content:Content, Page:Page, validatePage:validatePage, validatePortfolio:portValidate, validateContent: validateContent} = require("../models/portfolioSchemas.js");
 const {User, Uservalidate} = require("../models/usersSchemas.js");
-const { result } = require("lodash");
+const _ = require("lodash");
 const debug = require("debug")("p44:debug"); 
 
 // validate and add content block (returns Joi schema.validate)
@@ -21,6 +21,23 @@ async function addContent(id, content){
         return result;
     }  
 }
+async function addPage(id, page){
+  debug("=-=-=-=-=-=-=-=-=-=Beginning addPage=-=-=-=-=-=-=-=-=-=-=-");
+  let portfolio = await Portfolio.findOne({portID: id});
+  let result = validatePage(page);
+  
+  portfolio.pages.push(page);
+  
+  if(!result.error){
+      portfolio.save();
+      debug(`saved ${portfolio.portID}'s *Page* instance`);
+      return result;
+  }
+  else{
+      return result;
+  }  
+}
+
 async function createPortfolio(portID, title, email, content) {  
   debug("=-=-=-=-=-=-=-=-=-=Beginning Create Portfolio=-=-=-=-=-=-=-=-=-=-=-");
   const portfolio = new Portfolio({
@@ -43,6 +60,7 @@ async function createPortfolio(portID, title, email, content) {
 
     return portfolio;
   }
+
 async function createUser(email, username, password){
   debug("=-=-=-=-=-=-=-=-=-=Beginning createUser=-=-=-=-=-=-=-=-=-=-=-");
   const user = new User({
@@ -63,7 +81,7 @@ async function createUser(email, username, password){
 }
   
 exports.createPortfolio = createPortfolio;
-exports.addContent = addContent;
+exports.addPage = addPage;
 exports.createUser = createUser;
 exports.User = User;
 exports.Portfolio = Portfolio;

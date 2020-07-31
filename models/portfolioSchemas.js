@@ -21,14 +21,13 @@ const contentSchema = new mongoose.Schema({
     }
 });
 
-const pageSchema = new.mongoose.Schema({
+const pageSchema = new mongoose.Schema({
     "pageType": {
         required: true,
         type: String,
         enum: ["gallerybox", "threebox", "twobox"],
         lowercase: true,
     },
-    "galleryItems": [contentSchema],
     "content": [contentSchema]
 });
 
@@ -56,6 +55,7 @@ const portfolioSchema = new mongoose.Schema({
 
 const Portfolio = mongoose.model("portfolio", portfolioSchema);
 const Content = mongoose.model("content", contentSchema);
+const Page = mongoose.model("page", pageSchema);
 
 function validatePortfolio(portfolio) {     // with Joi
 
@@ -85,10 +85,12 @@ function validatePage(page){
         "pageType": Joi.string().valid("gallerybox", "threebox", "twobox").required(),
     });
     //console.log(schema.validate(content));
-    return schema.validate(content);
+    return schema.validate(page);
 }  
 
 module.exports.Portfolio = Portfolio;
 module.exports.Content = Content;
 module.exports.validatePortfolio = validatePortfolio;
 module.exports.validateContent = validateContent;
+module.exports.validatePage = validatePage;
+module.exports.Page = Page;

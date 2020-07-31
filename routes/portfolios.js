@@ -1,10 +1,10 @@
 const debug = require("debug")("p44:debug");    // debugging
 const mongoose = require("mongoose");
 const express = require("express");
-const {Portfolio,Content, validatePortfolio: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
+const {Portfolio,Content,Page:Page, validatePortfolio: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
 const router = express.Router();
 const pug = require("pug");
-const {createPortfolio, addContent} = require("../dbOps/operations.js");
+const {createPortfolio, addPage} = require("../dbOps/operations.js");
 
 router.use(express.json());
 router.use(express.static("./stylesheets"));
@@ -47,36 +47,34 @@ router.post("/", async (req, res)=>{
     debug("=-=-=-=-=-=-=-=-=-=Post Portfolio Req=-=-=-=-=-=-=-=-=-=-=-");
         try{
             const result = validatePortfolio(req.body);
-            if(!result){
+            if(result.error){
                 debug(`Joi was not obtained (Joi validation error): ${result}`);
                 return res.send("Invalid Entry").status(400);
             }
+            const port = await createPortfolio(req.body.portID, req.body.title, req.body.email);
+            if(!port){
+                res.status(400).send("Bad Request: 400");
+                return;
+            }
+            res.send(port);
         }
         catch(err){
             debug(err.message);
         }
 
-        const port = await createPortfolio(req.body.portID, req.body.title, req.body.email, new Content({
-            contentType: req.body.content.contentType,
-            text: req.body.content.text,
-            imageName: req.body.content.imageName,   
-            emURL: req.body.content.emURL})
-        );
-        if(!port){
-            res.status(400).send("Bad Request: 400");
-            return;
-        }
-        res.send(port);
+        
 });
 
-// push content block
+// push page block
 router.post("/:pID", async (req, res)=>{
     debug("=-=-=-=-=-=-=-=-=-=Add Content Req=-=-=-=-=-=-=-=-=-=-=-");
 
-    let answer = await addContent(req.params.pID, req.body);
+    let answer = await addPage(req.params.pID, req.body);
+    
+    console.log(answer);
     if(answer.error){
-        res.status(400).send(answer.error.details.message);
-        console.log(answer.error.details.message);
+        res.status(400).send("400: Bad Request");
+        console.log("400: Bad Request");
         return;
     }
     else{

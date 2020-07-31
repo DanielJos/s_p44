@@ -15,16 +15,54 @@
         img.image(src=portfolio.page[index].content[1].imageName)
     when "embedded"
         //- something will go here 
+
+
   .contentgallery
     .gallery0
-        img.image(src=portfolio.page[index].galleryitem[0])
+        case portfolio.page[index].content[2].contentType
+        when "text"
+            =portfolio.page[index].content[2].text
+        when "image"
+            img.image(src=portfolio.page[index].content[2].imageName)
+        when "embedded"
+            //- something will go here 
     .gallery1
-        img.image(src=portfolio.page[index].galleryitem[1])
+        case portfolio.page[index].content[3].contentType
+        when "text"
+            =portfolio.page[index].content[3].text
+        when "image"
+            img.image(src=portfolio.page[index].content[3].imageName)
+        when "embedded"
+            //- something will go here 
     .gallery2
-        img.image(src=portfolio.page[index].galleryitem[2])
+        case portfolio.page[index].content[4].contentType
+        when "text"
+            =portfolio.page[index].content[4].text
+        when "image"
+            img.image(src=portfolio.page[index].content[4].imageName)
+        when "embedded"
+            //- something will go here 
     .gallery3
-        img.image(src=portfolio.page[index].galleryitem[3])
+        case portfolio.page[index].content[5].contentType
+        when "text"
+            =portfolio.page[index].content[5].text
+        when "image"
+            img.image(src=portfolio.page[index].content[5].imageName)
+        when "embedded"
+            //- something will go here 
     .gallery4
-        img.image(src=portfolio.page[index].galleryitem[4])
-    .gallery6
-        img.image(src=portfolio.page[index].galleryitem[5])
+        case portfolio.page[index].content[6].contentType
+        when "text"
+            =portfolio.page[index].content[6].text
+        when "image"
+            img.image(src=portfolio.page[index].content[6].imageName)
+        when "embedded"
+            //- something will go here 
+    .gallery5
+        case portfolio.page[index].content[7].contentType
+        when "text"
+            =portfolio.page[index].content[7].text
+        when "image"
+            img.image(src=portfolio.page[index].content[7].imageName)
+        when "embedded"
+            //- something will go here 
