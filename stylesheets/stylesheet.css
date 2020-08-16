@@ -3,7 +3,118 @@
     padding: 0;
     font-family: 'Libre Caslon Text', serif;
     font-weight: 400;
+    z-index: inherit;
+    /* overflow: hidden; */
 }
 
+#iconGroup{
+    /* opacity: 60%; */
+}
 
+section{
+    /* height: 100vw; */
+}
+
+@media (max-width: 768px){
+    body{
+        overflow: hidden;
+    }
+    #p44 {
+        opacity: 20%;
+        display: block;
+        padding-top: 10px;
+        padding-bottom: 2px;
+        padding-left: 0.9vw;
+        font-size: 4vw;
+    }
+
+    #title {
+        opacity: 70%;
+        font-size: 6vw;
+        padding-left: 0.9vw;
+        
+    }
+
+    #heading {
+        width: 100vw;
+        padding-bottom: 0.5vh;
+        border-bottom: solid rgba(0, 0, 0, .05) 1px;
+    }
+
+    
+    #iconGroup{
+        left: 87vw;
+        padding-top: 9vh;
+        padding-right: 2vw;
+        opacity: 60%;
+        position: absolute;
+        z-index: 1;
+    }
+    .iconan{
+        z-index: inherit;
+    }
+
+    .icons{
+        width: 11vw;
+        float: right;
+        clear: right;
+        padding-bottom: 10vh;
+        transition: all 0.4s ease-in;
+        z-index: inherit;
+    }
+
+    .scroll-anim.fade-out #iconGroup {
+        opacity: 0%;
+        transform: translatex(10px);
+        /* left: 100px; */
+        transition: all 0.3s ease-out;
+    }
+
+    #sectionGroup{
+        height: 100vh;
+        width: 85vw;
+        /* width: 100vw; */
+        z-index: 0 inherit;
+
+        overflow-y: scroll;
+        transition: all 0.4s;
+    }
+
+    .scroll-anim.fade-out #sectionGroup{
+        width: 100vw;
+        transition: all 0.4s;
+    }
+
+    .sectionTitle{
+        padding-top: 4vh;
+        padding-bottom: 1vh;
+        font-size:15px;
+        
+    }
+    #img1{
+        width: 100%;
+        /* object-fit: cover; */
+    }
+
+    .section{
+        /* width: 85vw; */
+        height: 80vh;
+        float: left;
+    }
+
+    .section p, .section h2{
+        opacity: 70%;
+        padding-left: 0.9%;
+    }
+    .section p{
+        margin-top: 1vh;
+        border-left: solid rgba(0, 0, 0, .7) 1px;
+        font-size: 2.8vw;
+    }
+    .contents{
+        display: none;
+    }
+
+    
+} /* end of small devices */
 

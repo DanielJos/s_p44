@@ -8,7 +8,8 @@ const {createPortfolio, addPage} = require("../dbOps/operations.js");
 
 router.use(express.json());
 router.use(express.static("./stylesheets"));
-router.use(express.static("./user_images"));        // will this send all the files to the site? TODO
+router.use(express.static("./user_images"))
+router.use(express.static("./views/js")); 
 
 router.get("/", async (req, res)=>{
     res.render("welcome");
