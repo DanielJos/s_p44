@@ -1,36 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("@hapi/joi");
 
-const contentSchema = new mongoose.Schema({
-    "contentType": {
-        required: true,
-        type: String,
-        enum: ["text", "image", "embed"]
-    },
-    "text": {
-        type: String,
-        required: function(){return this.contentType === "text" }
-    },
-    "imageName": {
-        type: String,
-        required: function(){return this.contentType == "image" }
-    },
-    "emURL": {
-        type: String,
-        required: function(){return this.contentType == "embed" }
-    }
-});
-
-const pageSchema = new mongoose.Schema({
-    "pageType": {
-        required: true,
-        type: String,
-        enum: ["gallerybox", "threebox", "twobox"],
-        lowercase: true,
-    },
-    "content": [contentSchema]
-});
-
 const portfolioSchema = new mongoose.Schema({
     "portID": {
         type: String,
@@ -50,47 +20,46 @@ const portfolioSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    "pages": [pageSchema]
+    "instagram": {
+        type: String,
+        trim: true
+    },
+    "linkedin": {
+        type: String,
+        trim: true
+    },
+    "youtube": {
+        type: String,
+        trim: true
+    },
+    "paypal": {
+        type: String,
+        trim: true
+    },
+    "paragraph1":{
+        type: String,
+        maxlength: 480,
+    }
 });
 
 const Portfolio = mongoose.model("portfolio", portfolioSchema);
-const Content = mongoose.model("content", contentSchema);
-const Page = mongoose.model("page", pageSchema);
 
 function validatePortfolio(portfolio) {     // with Joi
 
     const schema = Joi.object( {
         "portID": Joi.string().min(5).required(),
         "title": Joi.string().required(),
-        "email": Joi.string()
+        "email": Joi.string(),
+        "instagram": Joi.string(),
+        "linkedin": Joi.string(),
+        "youtube": Joi.string(),
+        "paypal": Joi.string(),
+        "paragraph1": Joi.string(),
+        "maxlength": Joi.string()
     });
     
     return schema.validate(portfolio);
 }  
-function validateContent(content){
-
-    const schema = Joi.object({
-        "contentType": Joi.string().valid("text", "image", "embed").required(),
-        "text": Joi.string(),
-        "imageName": Joi.string(),
-        "emURL": Joi.string()
-    });
-    //console.log(schema.validate(content));
-    return schema.validate(content);
-}    
-
-function validatePage(page){
-
-    const schema = Joi.object({
-        "pageType": Joi.string().valid("gallerybox", "threebox", "twobox").required(),
-    });
-    //console.log(schema.validate(content));
-    return schema.validate(page);
-}  
 
 module.exports.Portfolio = Portfolio;
-module.exports.Content = Content;
 module.exports.validatePortfolio = validatePortfolio;
-module.exports.validateContent = validateContent;
-module.exports.validatePage = validatePage;
-module.exports.Page = Page;

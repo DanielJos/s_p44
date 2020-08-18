@@ -1,15 +1,15 @@
 const debug = require("debug")("p44:debug");    // debugging
 const mongoose = require("mongoose");
 const express = require("express");
-const {Portfolio,Content,Page:Page, validatePortfolio: validatePortfolio, validateContent: validateContent } = require("../models/portfolioSchemas.js");
+const {Portfolio,validatePortfolio: validatePortfolio} = require("../models/portfolioSchemas.js");
 const router = express.Router();
-const pug = require("pug");
 const {createPortfolio, addPage} = require("../dbOps/operations.js");
 
 router.use(express.json());
 router.use(express.static("./stylesheets"));
 router.use(express.static("./user_images"))
 router.use(express.static("./views/js")); 
+router.use(express.static("./views/icons"));
 
 router.get("/", async (req, res)=>{
     res.render("welcome");
@@ -27,11 +27,15 @@ router.get("/:pID", async (req, res)=>{
                 return;
             }
             else{
-                res.render("index", { 
-                    title: portfolio.title,
-                    email: portfolio.email,
-                    content: portfolio.content
-                } );
+                // res.sendFile("index.html")]
+                // res.sendFile("index.html", { root: "views"})
+
+                const data = {
+                    title: "pageName"
+                };
+                console.log(portfolio);
+                res.render("index", {"portfolio": portfolio,});
+                // res.send("Hey")
                 debug(`Rendered: ${portfolio.portID}`)
                 return;
             }
@@ -52,38 +56,39 @@ router.post("/", async (req, res)=>{
                 debug(`Joi was not obtained (Joi validation error): ${result}`);
                 return res.send("Invalid Entry").status(400);
             }
-            const port = await createPortfolio(req.body.portID, req.body.title, req.body.email);
-            if(!port){
-                res.status(400).send("Bad Request: 400");
-                return;
-            }
-            res.send(port);
+            const portf = await createPortfolio(req.body);
+
+            res.send(portf);
+            return;
         }
         catch(err){
-            debug(err.message);
+            debug("Caught:",err.message);
+            res.status(400).send("Bad Request: 400");
+            return;
         }
+        return;
 
         
 });
 
-// push page block
-router.post("/:pID", async (req, res)=>{
-    debug("=-=-=-=-=-=-=-=-=-=Add Content Req=-=-=-=-=-=-=-=-=-=-=-");
+// // push page block
+// router.post("/:pID", async (req, res)=>{
+//     debug("=-=-=-=-=-=-=-=-=-=Add Content Req=-=-=-=-=-=-=-=-=-=-=-");
 
-    let answer = await addPage(req.params.pID, req.body);
+//     let answer = await addPage(req.params.pID, req.body);
     
-    console.log(answer);
-    if(answer.error){
-        res.status(400).send("400: Bad Request");
-        console.log("400: Bad Request");
-        return;
-    }
-    else{
-        res.status(200).send(`Successfully added content block to ${req.params.pID}'s Portfolio`);
-        return;
-    }
+//     console.log(answer);
+//     if(answer.error){
+//         res.status(400).send("400: Bad Request");
+//         console.log("400: Bad Request");
+//         return;
+//     }
+//     else{
+//         res.status(200).send(`Successfully added content block to ${req.params.pID}'s Portfolio`);
+//         return;
+//     }
     
-});
+// });
 
 // find a portfolio, validate and then add the addition
 // router.put("/:portID", async (req, res)=>{

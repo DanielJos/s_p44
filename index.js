@@ -7,16 +7,19 @@ const morgan = require("morgan");       // http logging
 const helmet = require("helmet");       // header security
 const config = require("config");       // config files
 const mongoose = require("mongoose");
+const mustache = require("mustache-express");
 
 const portfolios = require("./routes/portfolios");   // portfolio HTTP routes
-const users = require("./routes/users");
+// const users = require("./routes/users");
 
 app.use(helmet());
-app.set("view engine", "pug");
+
+app.engine("html", mustache());
+app.set("view engine", "html");
 
 /////////routers//////////
-app.use("/portfolios", portfolios);
-app.use("/users/", users);
+app.use("/", portfolios);
+// app.use("/users/", users);
 //////////////////////////
 
 debug(`Config File: ${config.get("name")}`);
